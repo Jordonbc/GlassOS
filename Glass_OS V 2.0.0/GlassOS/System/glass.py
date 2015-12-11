@@ -185,9 +185,11 @@ def starter():
     passw = Entry(userSetup, show='*', font=("arial", 16))
     passw_title = Label(userSetup, text="Please retype your password here:", font=("arial", 16))
     passw1 = Entry(userSetup, show='*', font=("arial", 16))
-    go = Button(userSetup, text="Next", command=callback, font=("arial", 16))
+    go = Button(userSetup, text="Next", font=("arial", 16))
     perm_title = Label(userSetup, text="Enter your permission rights (0 = guest, 1 = admin):", font=("arial", 16))
     permission = Entry(userSetup, font=("arial", 16))
+
+    go.bind("<Button-1>", callback)
 
     blank.pack()
     blank = Label(userSetup, font=("arial", 16))
