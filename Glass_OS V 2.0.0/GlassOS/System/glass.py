@@ -1,22 +1,23 @@
 import platform  ## Imports platform
 import time  ## import the time modules
-import urllib  ## imports the main urllib files
 import urllib.request  ## import urllib.request so that it can download files
+import urllib  ## imports the main urllib files
 
 __author__ = 'Jordon'  ## I am the author :)
 __terminalVersion__ = "1.1.0"  ## This specifies the version of the terminal
 
 log = open("GlassOS.log", "w")  ## this opens a file called "glassOS.log" and is used to debug modules
 log.write(
-        "Glass OS started at " + time.strftime("%H:%M:%S") + "\n")  ## Tells the log file what time the program started
+    "Glass OS started at " + time.strftime("%H:%M:%S") + "\n")  ## Tells the log file what time the program started
 log.write(
-        "Python version: " + platform.python_version() + "\n")  ## Tells the logfile the version of python that it is using
+    "Python version: " + platform.python_version() + "\n")  ## Tells the logfile the version of python that it is using
 log.write(
-        "Operating System: " + platform.system() + " " + platform.release() + "\n")  ## Tells the log file what os it is on
+    "Operating System: " + platform.system() + " " + platform.release() + "\n")  ## Tells the log file what os it is on
 log.write(
-        "--------------------------------------------------------\n")  ## just adds a blank line to make it easier to read
+    "--------------------------------------------------------\n")  ## just adds a blank line to make it easier to read
 log.write("Importing Required files\n")  ## tells the log that it is importing the required files that is needed
 log.write("Importing time module: ")  ## tells the log that it is importing the time module
+
 
 ##############################################################
 #    Importing required files and logging it to glassOS.log
@@ -1079,12 +1080,12 @@ def hardwareMonitor():
     import platform
 
     if "linux" in platform.system():
-        print("LINUX MONITORING DON'T WORK YET")
+        print("LINUX MONITORING DONT WORK YET")
 
     hardwareMon = Tk()
     hardwareMon.title("Hardware Monitor")
     hardwareMon.geometry("600x180")
-    hardwareMon.minsize(width=700, height=180)
+    hardwareMon.minsize(width=600, height=180)
 
     diskFrame = Frame(hardwareMon)
     diskFrame.pack(side=LEFT, expand=YES)
@@ -1111,7 +1112,7 @@ def hardwareMonitor():
             RAM = psutil.virtual_memory()
             ramTotal = size(str(RAM[0]).replace("svmem(total=", ""))
             ramAvailableFree = size(
-                    str(RAM[1]).replace("available=", ""))
+                str(RAM[1]).replace("available=", ""))
             ramUsedPercent = str(RAM[2]).replace("percent=", "")
             ramUsed = size(str(RAM[3]).replace("used=", ""))
 
@@ -1132,22 +1133,22 @@ def hardwareMonitor():
             cpuLogicalCoresLabel.configure(text="CPU Logical Cores: " + str(cpuLogicalCores))
 
             RAMPercentLabel.configure(
-                    text="RAM used as Percentage: " + str(ramUsedPercent) + "%")
+                text="RAM used as Percentage: " + str(ramUsedPercent) + "%")
             RAMTotalLabel.configure(
-                    text="Total RAM: " + str(ramTotal))
+                text="Total RAM: " + str(ramTotal))
             RAMAvailableFreeLabel.configure(
-                    text="RAM Available/Free: " + str(ramAvailableFree))
+                text="RAM Available/Free: " + str(ramAvailableFree))
             RAMUsedLabel.configure(
-                    text="RAM used: " + str(ramUsed))
+                text="RAM used: " + str(ramUsed))
 
             diskPercentLabel.configure(
-                    text="Disk space used as percentage: " + str(diskUsedPercent) + "%")
+                text="Disk space used as percentage: " + str(diskUsedPercent) + "%")
             diskTotalLabel.configure(
-                    text="Total disk space: " + str(diskTotal))
+                text="Total disk space: " + str(diskTotal))
             diskUsedLabel.configure(
-                    text="Disk space used: " + str(diskUsed))
+                text="Disk space used: " + str(diskUsed))
             diskFreeLabel.configure(
-                    text="Disk space free: " + str(diskFree))
+                text="Disk space free: " + str(diskFree))
 
             cpuPercentLabel.after(5000, tick)
         else:
@@ -1668,7 +1669,7 @@ def update_check(checked=0):
     def update():
         statusText.configure(text="Status: Updating...")
         testfile = urllib.request.urlretrieve(
-                "http://192.168.0.10/owncloud/index.php/s/C5qptIexh6QsFcx/download", "update.zip")
+            "http://192.168.0.10/owncloud/index.php/s/C5qptIexh6QsFcx/download", "update.zip")
         statusText.configure(text="Status: done, restart Glass OS to continue.")
         checkButton.configure(text="Restart", command=restart)
 
@@ -1677,7 +1678,7 @@ def update_check(checked=0):
             try:
                 statusText.configure(text="Status: checking")
                 testfile = urllib.request.urlretrieve(
-                        "http://192.168.0.10/owncloud/index.php/s/p2leF7XZfBu4NhL/download, updater.txt")
+                    "http://192.168.0.10/owncloud/index.php/s/p2leF7XZfBu4NhL/download, updater.txt")
             except:
                 statusText.configure(text="Status: Could not contact server")
 
@@ -1974,6 +1975,7 @@ def cal():
 
 
 def start():
+    # TODO: Add a way to pin recently used programs to the start menu
     """
 
     Makes the start Menu appear and disappear
@@ -1988,9 +1990,6 @@ def start():
     global allPrograms
     global showAllOpen
     global recentFrame
-    global root_windowX
-    global root_windowY
-
     if start_open == 0:
         global jpad
         start_menu = Tk()
@@ -2018,8 +2017,7 @@ def start():
             recentLabel.pack()
             row0.configure(height=200, bg=menuColour)
 
-            start_menu.geometry(
-                    str(width) + "x" + str(int(height) - 85) + "+" + "0" + "+" + "0")
+            start_menu.geometry(str(width) + "x" + str(int(height) - 85) + "+" + "0" + "+" + "0")
 
             hardwareMonitorButton = Button(row1, text="TaskHardware Monitor", command=hardwareMonitor, width=20,
                                            height=10,
@@ -2053,10 +2051,7 @@ def start():
         else:
             recentLabel = Label(recentFrame, text="Recent", bg=menuColour)
             recentLabel.pack()
-
-            print("Start Menu X = " + str(root_windowX) + " Start Menu Y = " + str(root_windowY))
-
-            start_menu.geometry("242x260" + "+" + str(root_windowX) + "+" + str(root_windowY - 315))
+            start_menu.geometry("242x260" + "+" + "0" + "+" + str(int(height) - 350))
 
             hardwareMonitorButton = Button(recentFrame, text="TaskHardware Monitor", command=hardwareMonitor, width=100,
                                            bg=menuColour)
@@ -2190,7 +2185,7 @@ def start():
                     restartButton.pack(side=LEFT)
                     shutdown.pack(side=LEFT)
                 else:
-                    start_menu.geometry("242x400" + "+" + str(root_windowX) + "+" + str(root_windowY - 455))
+                    start_menu.geometry("242x400" + "+" + "0" + "+" + str(int(height) - 490))
 
                     hardwareMonitorButton = Button(allPrograms, text="Hardware Monitor", command=hardwareMonitor,
                                                    width=100,
@@ -2261,10 +2256,7 @@ clicked = 0
 
 
 def reposition(self):
-    global root_windowX
-    global root_windowY
     global notifcationBar
-    global start_menu
     global cTime
     cHeight = root_window.winfo_height()
     cWidth = root_window.winfo_width()
@@ -2278,16 +2270,8 @@ def reposition(self):
 
     notifcationBar.place_configure(x=int(cWidth) - 500, y=int(cHeight) - 55, height=55, width=500)
 
-    root_windowX = root_window.winfo_x()
-    root_windowY = (root_window.winfo_y() + root_window.winfo_height())
 
-    try:
-        start_menu.geometry("242x260" + "+" + str(root_windowX) + "+" + str(root_windowY - 315))
-        start_menu.focus()
-    except:
-        pass
-
-        # displayTime.pack_configure(side=RIGHT)
+    # displayTime.pack_configure(side=RIGHT)
 
 
 max = 0
@@ -2323,16 +2307,10 @@ def interface():
     global start
     global searchvar
     global root_window
-    global root_windowX
-    global root_windowY
     root_window = Tk()
     root_window.title("GlassOS      " + "Version: " + version + "      Username: " + active)
     root_window.geometry(widthHeight)
     root_window.minsize(800, 600)
-
-    root_windowX = root_window.winfo_x()
-    root_windowY = root_window.winfo_y()
-
     # root_window.wm_iconbitmap("System/JordonOS Logo.ico")
 
 
@@ -2380,6 +2358,9 @@ def interface():
 
         l[files].place(x=int(100), y=int(70) + space, anchor=CENTER)
 
+
+
+
     # root_window.configure(bg="#39d972")
 
     root_window.bind("<Escape>", fullScreen)
@@ -2404,7 +2385,7 @@ def interface():
         updIcon.pack(side=RIGHT)
         try:
             testfile = urllib.request.urlretrieve(
-                    "http://192.168.0.10/owncloud/index.php/s/p2leF7XZfBu4NhL/download", "updater.txt")
+                "http://192.168.0.10/owncloud/index.php/s/p2leF7XZfBu4NhL/download", "updater.txt")
         except:
             pass
         try:
