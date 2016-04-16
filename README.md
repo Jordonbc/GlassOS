@@ -1,13 +1,13 @@
 # Update 1.4.0
-Added ability to open text files from desktop.
-Added ability to open python files from desktop.
-Added ability to open python files in jpad.
-Added 'save As' feature in jpad.
+* Added ability to open text files from desktop.
+* Added ability to open python files from desktop.
+* Added ability to open python files in jpad.
+* Added 'save As' feature in jpad.
 
-Removed login fixed size.
+*Removed login fixed size.
 
-Fixed login screen.
-Fixed opening programs that dont center on screen.
+* Fixed login screen.
+* Fixed opening programs that dont center on screen.
 
 # GlassOS
 Glass OS is a Desktop Environment that runs on all operating systems that has python installed. This is a project that i would like to develop with in the coming years and i want to make it accessable to everyone, tech people and non-tech people.
