@@ -100,6 +100,9 @@ log.write("--------------------------------------------------------\n")
 #       This part of code defines what happens when it is starting for the first time
 ########################################################
 
+minWidth = 640
+minHeight = 360
+
 def starter():
     global root  ## defines the main window globally accross the entire program
 
@@ -120,7 +123,7 @@ def starter():
     screenHeight = root.winfo_screenheight()
     root.title("GlassOS Setup")
     root.geometry(str(screenWidth) + "x" + str(screenHeight))
-    root.minsize(800, 600)  ## the minimum size the program will allow
+    root.minsize(minWidth, minHeight)  ## the minimum size the program will allow
     root.attributes('-fullscreen', True)  ## makes the program fullscreen
     max = 1  ## a variable used to keep track of window mode
     root.bind("<Escape>", fullScreen)  ## binds the exc key to the window type
@@ -487,7 +490,7 @@ def login(windowTitle, widthHeight="1920x1080", icon="", bgColour=None, bg=None,
             file = open(allUsersDir + username.lower() + ".profile", "r")
             file.close()
         except:
-            message.configure(text="Err: Profile does not exist!")
+            message.configure(text="Err: Username or password is incorrect!")
         file = open(allUsersDir + username.lower() + ".profile", "r")
         global line
         line = file.readlines()
@@ -512,7 +515,9 @@ def login(windowTitle, widthHeight="1920x1080", icon="", bgColour=None, bg=None,
     passw = Entry(frame, show="*")
     go = Button(frame, text="Log in!", bg="#00FF00")
 
-    frame.place(x=int(bgWidth) / 2.5, y=int(bgHeight) / 2.5, width=300, height=300)
+    frame.place(x=int(window.winfo_width() / 3), y=window.winfo_height() / 3,
+                    width=int(int(window.winfo_width()) / 3),
+                    height=int(int(window.winfo_height()) / 3))
     title1.pack()
     usertitle.pack()
     user.pack()
@@ -523,14 +528,20 @@ def login(windowTitle, widthHeight="1920x1080", icon="", bgColour=None, bg=None,
 
     user.focus()
 
+    def reposition(self):
+        frame.place_configure(x=int(window.winfo_width() / 3), y=window.winfo_height() / 3,
+                    width=int(int(window.winfo_width()) / 3),
+                    height=int(int(window.winfo_height()) / 3))
+
     go.bind("<Button-1>", callback)
     go.bind("<Return>", callback)
     passw.bind("<Return>", callback)
+    window.bind("<Configure>", reposition)
 
     window.mainloop()
 
 
-login("GlassOS", allUsersDir=users, bg=background, bgWidth=width, bgHeight=height)
+login("GlassOS", widthHeight=widthHeight, allUsersDir=users, bg=background, bgWidth=width, bgHeight=height)
 
 active = open("active", "r").read()
 try:
@@ -1119,7 +1130,7 @@ def hardwareMonitor():
     hardwareMon = Tk()
     hardwareMon.title("Hardware Monitor")
     hardwareMon.geometry("600x180")
-    hardwareMon.minsize(width=700, height=180)
+    hardwareMon.minsize(width=600, height=180)
 
     diskFrame = Frame(hardwareMon)
     diskFrame.pack(side=LEFT, expand=YES)
@@ -1288,6 +1299,8 @@ def jpadEditor(file=None):
     recentAdd.write("jpad")
     recentAdd.close()
 
+    jpadFile  = file
+
     """
     Starts Jpad
     """
@@ -1359,29 +1372,40 @@ def jpadEditor(file=None):
         rootFont.mainloop()
 
     def open_command():
-        file = askopenfilename(defaultextension=".txt",
-                               filetypes=[("Text Files", ".txt"), ("All Files", ".*")],
+        nonlocal jpadFile
+        jpadFile = askopenfilename(defaultextension=".txt",
+                               filetypes=[("Text Files", ".txt"), ("Python .py", ".py"),  ("Python .pyw", ".pyw"), ("All Files", ".*")],
                                initialdir=user_dir)
 
-        rootJpad.title("Jpad Text Editor" + "     File: " + file)
-        file = open(file, "r")
-        if file != None:
-            contents = file.read()
+        rootJpad.title("Jpad Text Editor" + "     File: " + jpadFile)
+        jpadFile = open(jpadFile, "r")
+        if jpadFile != None:
+            contents = jpadFile.read()
             textPad.delete(0.0, END)
             textPad.insert(0.0, contents)
-            file.close()
+            jpadFile.close()
 
     def save_command():
-        file = asksaveasfilename(defaultextension=".txt",
-                                 filetypes=[("Text Files", ".txt"), ("All Files", ".*")],
-                                 initialdir=user_dir)
-        rootJpad.title("Jpad Text Editor" + "     File: " + file)
-        file = open(file, "w")
-        if file != None:
+        nonlocal jpadFile
+        jpadFile = open(file, "w")
+        if jpadFile != None:
             # slice off the last character from get, as an extra return is added
-            data = textPad.get(0, 0)
-            file.write(data)
-            file.close()
+            data = textPad.get(0.0, END)
+            jpadFile.write(data)
+            jpadFile.close()
+
+    def saveAs_command():
+        nonlocal jpadFile
+        jpadFile = asksaveasfilename(defaultextension=".txt",
+                               filetypes=[("Text Files", ".txt"), ("Python .py", ".py"),  ("Python .pyw", ".pyw"), ("All Files", ".*")],
+                               initialdir=user_dir)
+        rootJpad.title("Jpad Text Editor" + "     File: " + jpadFile)
+        jpadFile = open(jpadFile, "w")
+        if jpadFile != None:
+            # slice off the last character from get, as an extra return is added
+            data = textPad.get(0.0, END)
+            jpadFile.write(data)
+            jpadFile.close()
 
     def exit_command():
         closeApp()
@@ -1390,13 +1414,13 @@ def jpadEditor(file=None):
         rootJpad.title("Jpad Text Editor" + "     File: New File")
         textPad.delete(0.0, END)
 
-    if file != None:
-        rootJpad.title("Jpad Text Editor" + "     File: " + str(file))
-        file = open(file, "r")
-        contents = file.read()
+    if jpadFile != None:
+        rootJpad.title("Jpad Text Editor" + "     File: " + str(jpadFile))
+        jpadFile = open(file, "r")
+        contents = jpadFile.read()
         textPad.delete(0.0, END)
         textPad.insert(0.0, contents)
-        file.close()
+        jpadFile.close()
 
     menu = Menu(rootJpad)
     rootJpad.config(menu=menu)
@@ -1405,6 +1429,7 @@ def jpadEditor(file=None):
     filemenu.add_command(label="New", command=new)
     filemenu.add_command(label="Open...", command=open_command)
     filemenu.add_command(label="Save", command=save_command)
+    filemenu.add_command(label="Save As", command=saveAs_command)
     filemenu.add_separator()
     filemenu.add_command(label="Exit", command=exit_command)
 
@@ -1561,7 +1586,11 @@ def glass_quit():
     quit()
 
 
-def file_Explorer():
+def file_Explorer(folder=""):
+    if folder != "":
+        pass
+    else:
+        folder = user_dir
     recentAdd = open("GlassOS/Recent", "a")
     recentAdd.write("\n")
     recentAdd.write("fe")
@@ -1570,8 +1599,12 @@ def file_Explorer():
     """
     Starts File Explorer
     """
-    start_open = 0
-    start_menu.destroy()
+
+    try:
+        start_open = 0
+        start_menu.destroy()
+    except:
+        pass
 
     def dir_see(posX, posY, title="Title", directory="C:/", width_and_height="300x200"):
         global rootFV
@@ -1646,7 +1679,7 @@ def file_Explorer():
         rootFV.mainloop()
 
     dir_see(posX=centerWidth - 150, posY=centerHeight - 100, title=user_dir + " -File Explorer",
-            directory=user_dir)
+            directory=folder)
 
 
 def update_check(checked=0):
@@ -1710,21 +1743,21 @@ def update_check(checked=0):
         checkButton.configure(text="Restart", command=restart)
 
     def check():
-        if checked == 0:
-            try:
-                statusText.configure(text="Status: checking")
-                #testfile = urllib.request.urlretrieve(
-                        #"https://raw.githubusercontent.com/Jordonbc/GlassOS/master/updater.txt, updater.txt")
-                #updateFile = requests.get("https://raw.githubusercontent.com/Jordonbc/GlassOS/master/Glass_OS%20V%202.0.0/GlassOS/System/version")
-                #file = open("updater.txt", "w")
-                #file.write(updateFile.text)
-                #file.close()
-            except:
-                statusText.configure(text="Status: Could not contact server")
+        try:
+            statusText.configure(text="Status: checking")
+            #updateFile = urllib.request.urlretrieve(
+                    #"https://raw.githubusercontent.com/Jordonbc/GlassOS/master/updater.txt, updater.txt")
+            updateFile = requests.get("https://raw.githubusercontent.com/Jordonbc/GlassOS/master/updater.txt")
+            file = open("updater.txt", "w")
+            file.write(updateFile.text)
+            file.close()
+        except:
+            statusText.configure(text="Status: Could not contact server")
 
         try:
             updateVerFile = open("updater.txt", "r")
             updateVer = updateVerFile.read()
+            updateVerFile.close()
 
             if int(updateVer) > int(version):
                 statusText.configure(text="Status: There is a new update available!", fg="#0000ff")
@@ -2064,33 +2097,36 @@ def start():
             recentLabel.pack()
             row0.configure(height=200, bg=menuColour)
 
+            buttonWidth = 20
+            buttonHeight = 10
+
             start_menu.geometry(
                     str(width) + "x" + str(int(height) - 85) + "+" + "0" + "+" + "0")
 
-            hardwareMonitorButton = Button(row1, text="TaskHardware Monitor", command=hardwareMonitor, width=20,
-                                           height=10,
+            hardwareMonitorButton = Button(row1, text="TaskHardware Monitor", command=hardwareMonitor, width=buttonWidth,
+                                           height=buttonHeight,
                                            bg=menuColour)
-            musicPlayerButton = Button(row1, text="Music Player - Experimental", command=musicPlayer, width=20,
-                                       height=10,
+            musicPlayerButton = Button(row1, text="Music Player - Experimental", command=musicPlayer, width=buttonWidth,
+                                       height=buttonHeight,
                                        bg=menuColour)
-            infoButton = Button(row1, text="Glass OS Info Panel", command=info, width=20,
-                                height=10, bg=menuColour)
-            CustomAppLauncherButton = Button(row1, text="Custom App Launcher", command=cal, width=20,
-                                             height=10,
+            infoButton = Button(row1, text="Glass OS Info Panel", command=info, width=buttonWidth,
+                                height=buttonHeight, bg=menuColour)
+            CustomAppLauncherButton = Button(row1, text="Custom App Launcher", command=cal, width=buttonWidth,
+                                             height=buttonHeight,
                                              bg=menuColour)
-            terminalButton = Button(row1, text="Terminal", command=terminal, width=20,
-                                    height=10, bg=menuColour)
-            restartButton = Button(row1, text="Restart", command=restart, width=20,
-                                   height=10, bg=menuColour)
+            terminalButton = Button(row1, text="Terminal", command=terminal, width=buttonWidth,
+                                    height=buttonHeight, bg=menuColour)
+            restartButton = Button(row1, text="Restart", command=restart, width=buttonWidth,
+                                   height=buttonHeight, bg=menuColour)
             jpadButton = Button(row2, text="Jpad", command=jpadEditor, width=100, bg=menuColour)
-            chkUpdates = Button(row3, text="Check for Updates", command=update_check, width=20,
-                                height=10, bg=menuColour)
-            settingsButton = Button(row2, text="Settings", command=settings, width=20,
-                                    height=10, bg=menuColour)
-            fileExplorer = Button(row2, text="File Explorer", command=file_Explorer, width=20,
-                                  height=10, bg=menuColour)
-            shutdown = Button(row2, text="Shutdown", command=glass_quit, width=20,
-                              height=10, bg=menuColour)
+            chkUpdates = Button(row3, text="Check for Updates", command=update_check, width=buttonWidth,
+                                height=buttonHeight, bg=menuColour)
+            settingsButton = Button(row2, text="Settings", command=settings, width=buttonWidth,
+                                    height=buttonHeight, bg=menuColour)
+            fileExplorer = Button(row2, text="File Explorer", command=file_Explorer, width=buttonWidth,
+                                  height=buttonHeight, bg=menuColour)
+            shutdown = Button(row2, text="Shutdown", command=glass_quit, width=buttonWidth,
+                              height=buttonHeight, bg=menuColour)
 
             row0.pack()
             row1.pack()
@@ -2307,6 +2343,9 @@ clicked = 0
 
 
 def reposition(self):
+    global centerWidth
+    global centerHeight
+    global screenCenter
     global root_windowX
     global root_windowY
     global notifcationBar
@@ -2314,6 +2353,12 @@ def reposition(self):
     global cTime
     cHeight = root_window.winfo_height()
     cWidth = root_window.winfo_width()
+
+    centerWidth = root_window.winfo_x() + int(int(cWidth) /2)
+    centerHeight = root_window.winfo_y() + int(int(cHeight) /2)
+
+    screenCenter = str(centerWidth) + "+" + str(centerHeight)
+
     startPic.place_configure(x=int(0), y=int(cHeight) - 55)
 
     search.place_configure(x=57, y=int(cHeight) - 55, height=55, width=200)
@@ -2374,7 +2419,7 @@ def interface():
     root_window = Tk()
     root_window.title("GlassOS      " + "Version: " + version + "      Username: " + active)
     root_window.geometry(widthHeight)
-    root_window.minsize(800, 600)
+    root_window.minsize(minWidth, minHeight)
 
     root_windowX = root_window.winfo_x()
     root_windowY = root_window.winfo_y()
@@ -2404,13 +2449,20 @@ def interface():
 
     fileImage = PhotoImage(file="GlassOS/file.png")
 
-    def openFile():
+    prefix = user_dir
+    #prefix = os.path.expanduser("~")
+
+    def openFile(self):
         # print(fName)
-        fileURL = user_dir + "/Desktop/" + str(fName[files])
+        fileURL = prefix + "/Desktop/" + str(fName[files])
         # print(fileURL)
         jpadEditor(fileURL)
 
-    for file in os.listdir(user_dir + "/Desktop"):
+    def openFolder(self):
+        folderURL = prefix + "/Desktop/" + str(fName[files])
+        file_Explorer(folderURL)
+
+    for file in os.listdir(prefix + "/Desktop"):
         l.append(Label(root_window, text=file, font=("Arial", 11, "bold")))
 
         files += 1
@@ -2420,9 +2472,20 @@ def interface():
 
         space += 80
 
-        f.append(Button(root_window, image=fileImage, command=openFile))
+        f.append(Button(root_window, image=fileImage))
 
         f[files].place(x=int(80), y=int(20) + space, width=40, height=40)
+
+        if ".txt" in file:
+            f[files].bind("<Double-Button-1>", openFile)
+        elif ".py" in file:
+            f[files].bind("<Double-Button-1>", openFile)
+        elif ".pyw" in file:
+            f[files].bind("<Double-Button-1>", openFile)
+        elif os.path.isdir(prefix + "/Desktop/" + file):
+            f[files].bind("<Double-Button-1>", openFolder)
+        else:
+            pass
 
         l[files].place(x=int(100), y=int(70) + space, anchor=CENTER)
 
