@@ -1,13 +1,13 @@
 import platform  ## Imports platform
 import time  ## import the time modules
 import urllib  ## imports the main urllib files
-import urllib.request  ## import urllib.request so that it can download files
 import sys
+import tkinter
 
-try:
-    import requests
-except:
-    from GlassOS.libaries import requests as requests
+# try:
+    # import requests
+# except:
+    # from GlassOS.libaries import requests as requests
 
 default_stdout = sys.__stdout__
 default_stderr = sys.__stderr__
@@ -18,13 +18,12 @@ __terminalVersion__ = "1.1.0"  ## This specifies the version of the terminal
 
 log = open("GlassOS.log", "w")  ## this opens a file called "glassOS.log" and is used to debug modules
 log.write(
-        "Glass OS started at " + time.strftime("%H:%M:%S") + "\n")  ## Tells the log file what time the program started
+    "Glass OS started at " + time.strftime("%H:%M:%S") + "\n")  ## Tells the log file what time the program started
 log.write(
-        "Python version: " + platform.python_version() + "\n")  ## Tells the logfile the version of python that it is using
+    "Python version: " + platform.python_version() + "\n")  ## Tells the logfile the version of python that it is using
 log.write(
-        "Operating System: " + platform.system() + " " + platform.release() + "\n")  ## Tells the log file what os it is on
-log.write(
-        "--------------------------------------------------------\n")  ## just adds a blank line to make it easier to read
+    "Operating System: " + platform.system() + " " + platform.release() + "\n")  ## Tells the log file what os it is on
+log.write("Tkinter Version: "+ str(tkinter.TkVersion)+ "\n--------------------------------------------------------\n")
 log.write("Importing Required files\n")  ## tells the log that it is importing the required files that is needed
 log.write("Importing time module: ")  ## tells the log that it is importing the time module
 
@@ -95,7 +94,6 @@ except ImportError:
     log.write("Failed\n")
 log.write("--------------------------------------------------------\n")
 
-
 ########################################################
 #       This part of code defines what happens when it is starting for the first time
 ########################################################
@@ -103,7 +101,11 @@ log.write("--------------------------------------------------------\n")
 minWidth = 640
 minHeight = 360
 
+
 def starter():
+    log.write("--------------------------------------------------------\n")
+    log.write("Running starter()\n")
+    log.write("--------------------------------------------------------\n")
     global root  ## defines the main window globally accross the entire program
 
     ###############################
@@ -379,57 +381,103 @@ def starter():
 
     root.mainloop()  ## this makes it so that the program doesn't just close
 
-
+log.write("Checking for newOS in GlassOS/System\n")
 if os.path.exists("GlassOS/System/newOS"):  ## checks for of the newOS file exists and if so start the user setup
+    log.write("newOS Detected!\n")
     starter()
 else:
-    pass
+    log.write("newOS NOT detected!\n")
+    log.write("--------------------------------------------------------\n")
 
+log.write("Getting Version information from GlassOS/System\n")
 try:
     version = open("GlassOS/System/version", "r").read().replace("\n", "")  ## opens the program version
+    log.write("Version detected: "+ str(version) +"\n")
+    log.write("--------------------------------------------------------\n")
 except:
-    version = open("../GlassOS/System/version", "r").read().replace("\n", "")  ## for compatibility...
+    log.write("Version Not detected!\n")
+    log.write("Fatal Error Detected: Unable to get version Information!\n")
+    log.write("Shutting down")
+    log.write("--------------------------------------------------------\n")
+    sys.exit()
 
-root = Tk()  ## Creates a dummy window to get the screen width and hight
-screenWidth = root.winfo_screenwidth()  ## Gets the screen width and hight
-screenHeight = root.winfo_screenheight()
-
-root.destroy()  ## destroys the dummy window
+log.write("Making Dummy Window for screen width and height\n")
+try:
+    root = Tk()  ## Creates a dummy window to get the screen width and hight
+    screenWidth = root.winfo_screenwidth()  ## Gets the screen width and hight
+    screenHeight = root.winfo_screenheight()
+    root.destroy()  ## destroys the dummy window
+    log.write("Width: "+ str(screenWidth) +"\n")
+    log.write("Height: "+ str(screenHeight) + "\n")
+    log.write("--------------------------------------------------------\n")
+except:
+    log.write("Fatal Error Detected: Unable to get Screen Resolution!\n")
+    log.write("Check your tkinter install\n")
+    log.write("--------------------------------------------------------\n")
+    sys.exit()
 
 # (screenWidth)
 # print(screenHeight)
+
+log.write("Atempting to get settings from GlassOS/System\n")
+
 try:
     settingsFileOpen = open("GlassOS/System/settings.settings", "r")
     settingsFile = settingsFileOpen.readlines()
     settingsFileOpen.close()
+    log.write("System settings Detected!\n")
 except:
-    settingsFileOpen = open("../GlassOS/System/settings.settings", "r")
-    settingsFile = settingsFileOpen.readlines()
-    settingsFileOpen.close()
+    log.write("Fatal Error Detected: Unable to get settings from file!\n")
+    log.write("--------------------------------------------------------\n")
+    sys.exit()
 
 width = settingsFile[0].replace("\n", "")
+log.write("Width: " + str(width) + "\n")
+
 height = settingsFile[1].replace("\n", "")
+log.write("Height: "+ height + "\n")
 
 menuColour = settingsFile[4].replace("\n", "")
+log.write("Menu Colour: " + str(menuColour) + "\n")
 
 startMenuPic = settingsFile[5].replace("\n", "")
+log.write("Start Menu Picture: " + str(startMenuPic) + "\n")
 
 start_full = settingsFile[6].replace("\n", "")
+log.write("start Menu Fullscreen: "+ str(start_full) + "\n")
+log.write("--------------------------------------------------------\n")
 
+log.write("Checking if recent exists in GlassOS/\n")
 try:
     recentListOpen = open("GlassOS/Recent", "r")
     recentList = recentListOpen.readlines()
     recentListOpen.close()
+    log.write("recent Detected!\n")
+    log.write("--------------------------------------------------------\n")
 except:
-    recentListOpen = open("../GlassOS/Recent", "r")
-    recentList = recentListOpen.readlines()
-    recentListOpen.close()
+    log.write("Warning: recent NOT detected in /!\n")
+    log.write("--------------------------------------------------------\n")
+    sys.exit()
+    
+log.write("Checking the setting width against screen\n")
 
 if int(width) > int(screenWidth):
+    log.write("Warning: width is larger than screen size!\n")
     width = str(screenWidth)
-if int(height) > int(screenHeight):
-    height = str(screenHeight)
+    log.write("Correction made!\n")
+else:
+    log.write("Width is ok\n")
 
+log.write("Checking the setting height against screen\n")
+    
+if int(height) > int(screenHeight):
+    log.write("Warning: height is larger than screen size!\n")
+    height = str(screenHeight)
+    log.write("Correction made!\n")
+else:
+    log.write("Height is ok\n")
+
+log.write("--------------------------------------------------------\n")
 settingsFileOpen.close()
 
 widthHeight = width + "x" + height
@@ -445,14 +493,21 @@ background = settingsFile[3].replace("\n", "")
 
 def login(windowTitle, widthHeight="1920x1080", icon="", bgColour=None, bg=None, bgWidth="350", bgHeight="250",
           allUsersDir=""):
+    log.write("Running lgoin()\n")
     global username
     global active
-    window = Tk()
-    window.title(windowTitle)
-    window.geometry(widthHeight)
-    canvas = Canvas(window, width=bgWidth, height=bgHeight)
-    frame = Frame(canvas)
-    frame.configure(bg=bgColour)
+    try:
+        log.write("Atempting to create window\n")
+        window = Tk()
+        window.title(windowTitle)
+        window.geometry(widthHeight)
+        canvas = Canvas(window, width=bgWidth, height=bgHeight)
+        frame = Frame(canvas)
+        frame.configure(bg=bgColour)
+        log.write("Success, window created!\n")
+    except:
+        log.write("Fatal Error Detected: Unable to create window!\n")
+        sys.exit()
 
     max = 0
 
@@ -471,16 +526,25 @@ def login(windowTitle, widthHeight="1920x1080", icon="", bgColour=None, bg=None,
     window.bind("<Escape>", fullScreen)
 
     try:
+        log.write("Atempting to draw background on window\n")
         background_image = PhotoImage(file=bg)
         canvas.create_image(0, 0, image=background_image, anchor=NW)
         canvas.pack(expand=YES, fill=BOTH)
+        log.write("Success, Background Created!\n")
     except:
-        pass
+        log.write("Warning: Unable to draw background! Skipping\n")
     try:
+        log.write("Atempting to add icon to window\n")
         window.wm_iconbitmap(icon)
+        log.write("Icon Successfully Created!\n")
     except:
-        pass
-    window.configure(bg=bgColour)
+        log.write("Warning: Unable to Create icon on window! Skipping\n")
+    try:
+        log.write("Atempting to draw background on window\n")
+        window.configure(bg=bgColour)
+        log.write("Background Successfully Created!\n")
+    except:
+        log.write("Warning: Unable to create Background Colour! Skipping\n")
 
     def callback(event):
         global username
@@ -516,8 +580,8 @@ def login(windowTitle, widthHeight="1920x1080", icon="", bgColour=None, bg=None,
     go = Button(frame, text="Log in!", bg="#00FF00")
 
     frame.place(x=int(window.winfo_width() / 3), y=window.winfo_height() / 3,
-                    width=int(int(window.winfo_width()) / 3),
-                    height=int(int(window.winfo_height()) / 3))
+                width=int(int(window.winfo_width()) / 3),
+                height=int(int(window.winfo_height()) / 3))
     title1.pack()
     usertitle.pack()
     user.pack()
@@ -530,24 +594,29 @@ def login(windowTitle, widthHeight="1920x1080", icon="", bgColour=None, bg=None,
 
     def reposition(self):
         frame.place_configure(x=int(window.winfo_width() / 3), y=window.winfo_height() / 3,
-                    width=int(int(window.winfo_width()) / 3),
-                    height=int(int(window.winfo_height()) / 3))
+                              width=int(int(window.winfo_width()) / 3),
+                              height=int(int(window.winfo_height()) / 3))
 
     go.bind("<Button-1>", callback)
     go.bind("<Return>", callback)
     passw.bind("<Return>", callback)
     window.bind("<Configure>", reposition)
+    
+    log.write("--------------------------------------------------------\n")
 
     window.mainloop()
 
 
 login("GlassOS", widthHeight=widthHeight, allUsersDir=users, bg=background, bgWidth=width, bgHeight=height)
 
-active = open("active", "r").read()
+try:
+    active = open("active", "r").read()
+except:
+    sys.exit()
 try:
     os.remove("active")
 except:
-    quit()
+    sys.exit()
 username = active
 user_dir = users + username
 
@@ -631,7 +700,7 @@ def terminal():
                             print("\n Colour must be hexadecimal!")
                     elif input.get() == "clear":
                         input.delete(0, END)
-                        print("\n"*25)
+                        print("\n" * 25)
                     else:
                         global a
                         a += 1
@@ -806,8 +875,11 @@ def settings():
     recentAdd.close()
 
     global answer
-    start_open = 0
-    start_menu.destroy()
+    try:
+        start_open = 0
+        start_menu.destroy()
+    except:
+        pass
 
     def askPermDialog(program):
         bgColour = None
@@ -1157,7 +1229,7 @@ def hardwareMonitor():
             RAM = psutil.virtual_memory()
             ramTotal = size(str(RAM[0]).replace("svmem(total=", ""))
             ramAvailableFree = size(
-                    str(RAM[1]).replace("available=", ""))
+                str(RAM[1]).replace("available=", ""))
             ramUsedPercent = str(RAM[2]).replace("percent=", "")
             ramUsed = size(str(RAM[3]).replace("used=", ""))
 
@@ -1178,22 +1250,22 @@ def hardwareMonitor():
             cpuLogicalCoresLabel.configure(text="CPU Logical Cores: " + str(cpuLogicalCores))
 
             RAMPercentLabel.configure(
-                    text="RAM used as Percentage: " + str(ramUsedPercent) + "%")
+                text="RAM used as Percentage: " + str(ramUsedPercent) + "%")
             RAMTotalLabel.configure(
-                    text="Total RAM: " + str(ramTotal))
+                text="Total RAM: " + str(ramTotal))
             RAMAvailableFreeLabel.configure(
-                    text="RAM Available/Free: " + str(ramAvailableFree))
+                text="RAM Available/Free: " + str(ramAvailableFree))
             RAMUsedLabel.configure(
-                    text="RAM used: " + str(ramUsed))
+                text="RAM used: " + str(ramUsed))
 
             diskPercentLabel.configure(
-                    text="Disk space used as percentage: " + str(diskUsedPercent) + "%")
+                text="Disk space used as percentage: " + str(diskUsedPercent) + "%")
             diskTotalLabel.configure(
-                    text="Total disk space: " + str(diskTotal))
+                text="Total disk space: " + str(diskTotal))
             diskUsedLabel.configure(
-                    text="Disk space used: " + str(diskUsed))
+                text="Disk space used: " + str(diskUsed))
             diskFreeLabel.configure(
-                    text="Disk space free: " + str(diskFree))
+                text="Disk space free: " + str(diskFree))
 
             cpuPercentLabel.after(5000, tick)
         else:
@@ -1299,7 +1371,7 @@ def jpadEditor(file=None):
     recentAdd.write("jpad")
     recentAdd.close()
 
-    jpadFile  = file
+    jpadFile = file
 
     """
     Starts Jpad
@@ -1374,8 +1446,9 @@ def jpadEditor(file=None):
     def open_command():
         nonlocal jpadFile
         jpadFile = askopenfilename(defaultextension=".txt",
-                               filetypes=[("Text Files", ".txt"), ("Python .py", ".py"),  ("Python .pyw", ".pyw"), ("All Files", ".*")],
-                               initialdir=user_dir)
+                                   filetypes=[("Text Files", ".txt"), ("Python .py", ".py"), ("Python .pyw", ".pyw"),
+                                              ("All Files", ".*")],
+                                   initialdir=user_dir)
 
         rootJpad.title("Jpad Text Editor" + "     File: " + jpadFile)
         jpadFile = open(jpadFile, "r")
@@ -1397,8 +1470,9 @@ def jpadEditor(file=None):
     def saveAs_command():
         nonlocal jpadFile
         jpadFile = asksaveasfilename(defaultextension=".txt",
-                               filetypes=[("Text Files", ".txt"), ("Python .py", ".py"),  ("Python .pyw", ".pyw"), ("All Files", ".*")],
-                               initialdir=user_dir)
+                                     filetypes=[("Text Files", ".txt"), ("Python .py", ".py"), ("Python .pyw", ".pyw"),
+                                                ("All Files", ".*")],
+                                     initialdir=user_dir)
         rootJpad.title("Jpad Text Editor" + "     File: " + jpadFile)
         jpadFile = open(jpadFile, "w")
         if jpadFile != None:
@@ -1581,9 +1655,13 @@ def glass_quit():
     """
     Quits the Program
     """
-    start_open = 0
-    start_menu.destroy()
-    quit()
+    try:
+        start_open = 0
+        start_menu.destroy()
+        root_window.destroy()
+        sys.exit()
+    except:
+        pass
 
 
 def file_Explorer(folder=""):
@@ -1736,8 +1814,8 @@ def update_check(checked=0):
     def update():
         statusText.configure(text="Status: Updating...")
         testfile = urllib.request.urlretrieve(
-                "https://github.com/Jordonbc/GlassOS/archive/master.zip", "update.zip")
-        #zipFile = requests.get("https://github.com/Jordonbc/GlassOS/archive/master.zip")
+            "https://github.com/Jordonbc/GlassOS/archive/master.zip", "update.zip")
+        # zipFile = requests.get("https://github.com/Jordonbc/GlassOS/archive/master.zip")
 
         statusText.configure(text="Status: done, restart Glass OS to continue.")
         checkButton.configure(text="Restart", command=restart)
@@ -1745,8 +1823,8 @@ def update_check(checked=0):
     def check():
         try:
             statusText.configure(text="Status: checking")
-            #updateFile = urllib.request.urlretrieve(
-                    #"https://raw.githubusercontent.com/Jordonbc/GlassOS/master/updater.txt, updater.txt")
+            # updateFile = urllib.request.urlretrieve(
+            # "https://raw.githubusercontent.com/Jordonbc/GlassOS/master/updater.txt, updater.txt")
             updateFile = requests.get("https://raw.githubusercontent.com/Jordonbc/GlassOS/master/updater.txt")
             file = open("updater.txt", "w")
             file.write(updateFile.text)
@@ -1773,11 +1851,11 @@ def update_check(checked=0):
             else:
                 statusText.configure(text="Status: Could not contact server")
 
-            # glassOSLogo = PhotoImage(file="GlassOS/Glass_OS_Logo.png")
-            # glassOSPicture = Button(rootInfo, image=glassOSLogo)
+                # glassOSLogo = PhotoImage(file="GlassOS/Glass_OS_Logo.png")
+                # glassOSPicture = Button(rootInfo, image=glassOSLogo)
 
-            # glassOSPicture = Label(rootUpdate, text="Glass OS " + version,
-            # font=("Space Bd BT Bold", 32, ""), fg="#FF0000", bg=menuColour)
+                # glassOSPicture = Label(rootUpdate, text="Glass OS " + version,
+                # font=("Space Bd BT Bold", 32, ""), fg="#FF0000", bg=menuColour)
 
     # glassOSPicture.pack()
 
@@ -2013,7 +2091,7 @@ def cal():
 
     def execute():
         program = askopenfilename(defaultextension=".py",
-                                  filetypes=[("Executable File", ".py")],
+                                  filetypes=[("Executable File", ".py"),("Executable", ".exe")],
                                   initialdir="Programs")
         viewName.configure(state=NORMAL)
         viewName.delete(0, END)
@@ -2101,9 +2179,10 @@ def start():
             buttonHeight = 10
 
             start_menu.geometry(
-                    str(width) + "x" + str(int(height) - 85) + "+" + "0" + "+" + "0")
+                str(width) + "x" + str(int(height) - 85) + "+" + "0" + "+" + "0")
 
-            hardwareMonitorButton = Button(row1, text="TaskHardware Monitor", command=hardwareMonitor, width=buttonWidth,
+            hardwareMonitorButton = Button(row1, text="TaskHardware Monitor", command=hardwareMonitor,
+                                           width=buttonWidth,
                                            height=buttonHeight,
                                            bg=menuColour)
             musicPlayerButton = Button(row1, text="Music Player - Experimental", command=musicPlayer, width=buttonWidth,
@@ -2351,11 +2430,12 @@ def reposition(self):
     global notifcationBar
     global start_menu
     global cTime
+
     cHeight = root_window.winfo_height()
     cWidth = root_window.winfo_width()
-
-    centerWidth = root_window.winfo_x() + int(int(cWidth) /2)
-    centerHeight = root_window.winfo_y() + int(int(cHeight) /2)
+    
+    centerWidth = root_window.winfo_x() + int(int(cWidth) / 2)
+    centerHeight = root_window.winfo_y() + int(int(cHeight) / 2)
 
     screenCenter = str(centerWidth) + "+" + str(centerHeight)
 
@@ -2416,6 +2496,8 @@ def interface():
     global root_window
     global root_windowX
     global root_windowY
+    global fileImage
+    global background_image
     root_window = Tk()
     root_window.title("GlassOS      " + "Version: " + version + "      Username: " + active)
     root_window.geometry(widthHeight)
@@ -2432,6 +2514,7 @@ def interface():
     background_image = PhotoImage(file=background)
     canvas.create_image(0, 0, image=background_image, anchor=NW)
     canvas.pack(expand=YES, fill=BOTH)
+    
     start_image = PhotoImage(file=startMenuPic)
 
     startPic = Button(root_window, image=start_image, command=start, bg=menuColour)
@@ -2440,59 +2523,97 @@ def interface():
     root_window.attributes('-fullscreen', True)
     max = 1
 
-    f = []
-    l = []
-    fName = []
-    place = []
-    files = -1
-    space = 80
+    # root_window.configure(bg="#39d972")
 
     fileImage = PhotoImage(file="GlassOS/file.png")
 
-    prefix = user_dir
-    #prefix = os.path.expanduser("~")
+    def desktopRefresh():
+        f = []
+        l = []
+        fName = []
+        place = []
+        files = -1
+        space = 80
 
-    def openFile(self):
-        # print(fName)
-        fileURL = prefix + "/Desktop/" + str(fName[files])
-        # print(fileURL)
-        jpadEditor(fileURL)
+        prefix = user_dir
 
-    def openFolder(self):
-        folderURL = prefix + "/Desktop/" + str(fName[files])
-        file_Explorer(folderURL)
+        # prefix = os.path.expanduser("~")
+        def openFile(self):
+            # print(fName)
+            fileURL = prefix + "/Desktop/" + str(fName[files])
+            # print(fileURL)
+            jpadEditor(fileURL)
 
-    for file in os.listdir(prefix + "/Desktop"):
-        l.append(Label(root_window, text=file, font=("Arial", 11, "bold")))
+        def openFolder(self):
+            folderURL = prefix + "/Desktop/" + str(fName[files])
+            file_Explorer(folderURL)
 
-        files += 1
+        # for file in fName:
+        #     if os.path.exists(prefix + "/Desktop/" + file):
+        #         pass
+        #     else:
+        #         try:
+        #             l[files].destroy()
+        #             f = []
+        #             l = []
+        #             fName = []
+        #             place = []
+        #             files = -1
+        #
+        #         except:
+        #             pass
 
-        fName.append(file)
-        place.append(files)
+        try:
+            for file in os.listdir(prefix + "/Desktop"):
+                if file not in fName:
+                    l.append(Label(root_window, text=file, font=("Arial", 11, "bold")))
 
-        space += 80
+                    files += 1
 
-        f.append(Button(root_window, image=fileImage))
+                    fName.append(file)
+                    place.append(files)
 
-        f[files].place(x=int(80), y=int(20) + space, width=40, height=40)
+                    space += 80
 
-        if ".txt" in file:
-            f[files].bind("<Double-Button-1>", openFile)
-        elif ".py" in file:
-            f[files].bind("<Double-Button-1>", openFile)
-        elif ".pyw" in file:
-            f[files].bind("<Double-Button-1>", openFile)
-        elif os.path.isdir(prefix + "/Desktop/" + file):
-            f[files].bind("<Double-Button-1>", openFolder)
-        else:
+                    f.append(Button(root_window, image=fileImage))
+
+                    f[files].place(x=int(80), y=int(20) + space, width=40, height=40)
+
+                    if ".txt" in file:
+                        f[files].bind("<Double-Button-1>", openFile)
+                    elif ".py" in file:
+                        f[files].bind("<Double-Button-1>", openFile)
+                    elif ".pyw" in file:
+                        f[files].bind("<Double-Button-1>", openFile)
+                    elif os.path.isdir(prefix + "/Desktop/" + file):
+                        f[files].bind("<Double-Button-1>", openFolder)
+                    else:
+                        pass
+                    l[files].place(x=int(100), y=int(70) + space, anchor=CENTER)
+        except:
             pass
 
-        l[files].place(x=int(100), y=int(70) + space, anchor=CENTER)
+    def refresh(self):
+        desktopRefresh()
 
-    # root_window.configure(bg="#39d972")
+    desktopRefresh()
+
+    root_window.bind("<F5>", refresh)
 
     root_window.bind("<Escape>", fullScreen)
     root_window.bind("<Configure>", reposition)
+	
+    contextMenu = Menu(root_window, tearoff=0)
+	
+    contextMenu.add_command(label="Refresh", command=desktopRefresh)
+    contextMenu.add_command(label="Jpad", command=jpadEditor)
+    contextMenu.add_command(label="Terminal", command=terminal)
+    contextMenu.add_command(label="Settings", command=settings)
+	
+    def contextMenuPopup(event):
+        contextMenu.post(event.x_root, event.y_root)
+
+    root_window.bind("<Button-3>", contextMenuPopup)
 
     searchText = Label(root_window, text="Search for: ")
     searchvar = StringVar()
@@ -2512,8 +2633,7 @@ def interface():
         updIcon = Button(notifcationBar, text="!")
         updIcon.pack(side=RIGHT)
         try:
-            testfile = urllib.request.urlretrieve(
-                    "http://192.168.0.10/owncloud/index.php/s/p2leF7XZfBu4NhL/download", "updater.txt")
+            testfile = requests.get("https://raw.githubusercontent.com/Jordonbc/GlassOS/master/updater.txt")
         except:
             pass
         try:
@@ -2533,6 +2653,7 @@ def interface():
     # font=("Arial", 20))
     # versionText.place(x=int(width) - 300, y=int(height) - 120)
     def clockTick():
+        desktopRefresh()
         global time1
         # cTime = time.strftime("%H:%M:%S")
         # print(cTime)
