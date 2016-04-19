@@ -48,5 +48,8 @@ Hardware Monitor allows you to Check your storage, RAM and CPU usage.
 ### Terminal
 This is a cool thing I added. It is an integrated python terminal embedded in Glass OS. It allows you to type python commands.
 
+# Open Source
+This is an open source project and you are allowed to add your own code.
+
 # Disclaimer:
 Dont use your normal passwords with Glass OS as they are not encrypted.
