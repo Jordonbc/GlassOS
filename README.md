@@ -1,5 +1,6 @@
 # Update 1.5.0
 * #### No more python version problems, Glass OS has python built in :)
+
 * Added right click context menu on desktop.
 * Added ability to refresh the desktop.
 * Added ability to open text files from desktop.
