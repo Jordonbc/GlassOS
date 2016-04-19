@@ -6,7 +6,7 @@
 * Added ability to open python files in jpad.
 * Added 'save As' feature in jpad.
 
-* ### No more python version problems Glass OS has python built in :)
+* #### No more python version problems Glass OS has python built in :)
 
 * Removed login fixed size.
 * Replaced run.pyw with run.exe
