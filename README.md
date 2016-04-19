@@ -1,11 +1,11 @@
 # Update 1.5.0
+* #### No more python version problems, Glass OS has python built in :)
 * Added right click context menu on desktop.
 * Added ability to refresh the desktop.
 * Added ability to open text files from desktop.
 * Added ability to open python files from desktop.
 * Added ability to open python files in jpad.
 * Added 'save As' feature in jpad.
-* #### No more python version problems, Glass OS has python built in :)
 * Removed login fixed size.
 * Replaced run.pyw with run.exe
 * Fixed login screen.
