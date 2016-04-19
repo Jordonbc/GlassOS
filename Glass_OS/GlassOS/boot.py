@@ -2,6 +2,7 @@ import shutil
 import zipfile
 from tkinter import *
 import os
+import sys
 
 def chkState():
     f = open("state", "r")
@@ -13,7 +14,7 @@ def chkState():
         f.write("0")
         os.system("python run.pyw")
     else:
-        quit()
+        sys.exit()
 
 def chkUpdate():
     if os.path.exists("update.zip"):
