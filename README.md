@@ -17,7 +17,7 @@
 Glass OS is a Desktop Environment that runs on all operating systems that has python installed. This is a project that i would like to develop with in the coming years and i want to make it accessable to everyone, tech people and non-tech people.
 
 Worried about your current operating system?
-Theres no need to worry Glass OS os a dedicated program that just runs in fullscreen on-top of your current operating system and it does not start-up at boot.
+Theres no need to worry, Glass OS is a dedicated program that just runs in fullscreen on-top of your current operating system and it does not start up at boot.
 
 ## Built-in programs:
 
