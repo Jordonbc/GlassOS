@@ -52,4 +52,4 @@ This is a cool thing I added. It is an integrated python terminal embedded in Gl
 This is an open source project and you are allowed to add your own code.
 
 # Disclaimer:
-Dont use your normal passwords with Glass OS as they are not encrypted.
+Dont use your normal passwords with Glass OS as they are not encrypted. (Working on that)
