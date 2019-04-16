@@ -144,10 +144,10 @@ def starter():
 
     def callback(self):
         global file
+        global username
         username = user.get()
         user_dir = "Users/" + username
         perm = permission.get()
-        global username
         username = user.get()
 
         password = passw.get()
@@ -752,9 +752,8 @@ def terminal():
 
             terminal()
 
-            appFocus = 1
-
             global appFocus
+            appFocus = 1
 
             def minimize(self):
                 global appFocus
@@ -838,9 +837,8 @@ def musicPlayer():
     sound.pack(side=LEFT)
     openButton.pack(side=LEFT)
 
-    appFocus = 1
-
     global appFocus
+    appFocus = 1
 
     def minimize(self):
         global appFocus
@@ -943,10 +941,10 @@ def settings():
 
                     def callback():
                         global file
+                        global username
                         username = user.get()
                         user_dir = "Users/" + username
                         perm = permission.get()
-                        global username
                         username = user.get()
 
                         password = passw.get()
@@ -1128,9 +1126,8 @@ def settings():
             msg.pack()
             warn.pack(side=BOTTOM)
 
-            appFocus = 1
-
             global appFocus
+            appFocus = 1
 
             def minimize(self):
                 global appFocus
@@ -1309,9 +1306,8 @@ def hardwareMonitor():
 
     tick()
 
-    appFocus = 1
-
     global appFocus
+    appFocus = 1
 
     def minimize(self):
         global appFocus
@@ -1511,9 +1507,8 @@ def jpadEditor(file=None):
     menu.add_cascade(label="Font", menu=fontMenu)
     fontMenu.add_command(label="font", command=chfont)
 
-    appFocus = 1
-
     global appFocus
+    appFocus = 1
 
     def minimize(self):
         global appFocus
@@ -1549,8 +1544,8 @@ def appUnavailable(app):
     except:
         pass
 
-    appFocus = 1
     global appFocus
+    appFocus = 1
 
     def minimize(self):
         global appFocus
@@ -1604,8 +1599,8 @@ def info():
     except:
         pass
 
-    appFocus = 1
     global appFocus
+    appFocus = 1
 
     def minimize(self):
         global appFocus
@@ -1727,8 +1722,8 @@ def file_Explorer(folder=""):
         create_root(treeview, directory)
         treeview.bind('<<TreeviewOpen>>', update_tree)
 
-        appFocus = 1
         global appFocus
+        appFocus = 1
 
         def minimize(self):
             global appFocus
@@ -1783,8 +1778,8 @@ def update_check(checked=0):
     except:
         pass
 
-    appFocus = 1
     global appFocus
+    appFocus = 1
 
     def minimize(self):
         global appFocus
@@ -2068,9 +2063,9 @@ def cal():
     except:
         pass
 
-    appFocus = 1
     global appFocus
-
+    appFocus = 1
+    
     def minimize(self):
         global appFocus
         appFocus = 0
@@ -2486,6 +2481,7 @@ def interface():
     global startPic
     global root_window
     global canvas
+    global root_window
     try:
         root_window.destroy()
     except:
@@ -2493,7 +2489,6 @@ def interface():
     global search
     global start
     global searchvar
-    global root_window
     global root_windowX
     global root_windowY
     global fileImage
